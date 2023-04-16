@@ -2,7 +2,11 @@
   "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": "build"
+    "outDir": "build",
+    "baseUrl": "./",
+    "paths": {"cubic-hermite": ["src/types/cubic-hermite"]},
+    "typeRoots": ["types", "node_modules/@types"],
+    "esModuleInterop": true
   },
   "include": [
     "src/**/*.ts",
