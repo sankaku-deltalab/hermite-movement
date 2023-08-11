@@ -77,6 +77,10 @@ export namespace HermitePath {
     return {paths};
   }
 
+  export function getEndTimeMs(path: HermitePath): MilliSeconds {
+    return path.paths[path.paths.length - 1].end.timeMs;
+  }
+
   export function calcPointAtTime(
     path: HermitePath,
     timeMs: MilliSeconds
