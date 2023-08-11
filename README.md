@@ -5,41 +5,40 @@ Define movement path with [Cubic Hermite spline](https://en.wikipedia.org/wiki/C
 ## Usage
 
 ```typescript
-import {HermiteMovement, THermiteMovement} from 'hermite-movement';
+import {HermitePath, RawHermitePathNode} from 'hermite-movement';
 
-// 1. Define movement and compile it.
-const mv: HermiteMovement = {
-  startVelocity: {x: 0, y: 0},
-  destinations: [
-    {durationMs: 500, position: {x: 500, y: 0}, endVelocity: {x: 500, y: 0}},
-    {
-      durationMs: 200,
-      position: {x: 600, y: 100},
-      endVelocity: {x: 0, y: 100},
-      startVelocityOverride: {x: 1000, y: 0},
-    },
-    {durationMs: 500, position: {x: 2100, y: 100}, endVelocity: {x: 0, y: 0}},
-  ],
-};
-const compiledMv = THermiteMovement.compileMovement(mv);
+// 1. Define path by nodes.
+const nodes: RawHermitePathNode[] = [
+  {durationMs: 0, pos: {x: 0, y: 0}, velocity: {x: 500, y: 0}},
+  {
+    durationMs: 200,
+    pos: {x: 600, y: 100},
+    velocity: {x: 1000, y: 0},
+  },
+  {durationMs: 500, pos: {x: 2100, y: 100}, velocity: {x: 0, y: 0}},
+];
 
-// 2. Create state
-const state = THermiteMovement.new(compiledMv);
+// 2. Create path from nodes.
+const hPath = HermitePath.create(nodes);
 
-// 3. Update it
-const timeDeltaMs = 123;
-const [delta, newState] = THermiteMovement.update(state, timeDeltaMs);
+// 3-1. Calc point at time
+{
+  const timeMs = 123;
+  const {
+    done,
+    point: {pos, velocity},
+  } = HermitePath.calcPointAtTime(hPath, timeMs);
+}
 
-// 4. Use delta or new state
-console.log(
-  delta.done,
-  delta.doneDelta,
-  delta.positionDelta,
-  delta.velocityDelta
-);
-console.log(
-  newState.done, // = delta.done
-  newState.position,
-  newState.velocity
-);
+// 3-2. Calc delta
+{
+  const prevTimeMs = 123;
+  const currentTimeMs = 124;
+  const {
+    done,
+    currentPoint,
+    delta: {posDelta, accel},
+  } = HermitePath.calcDeltaAtTime(hPath, prevTimeMs, currentTimeMs);
+}
+
 ```
