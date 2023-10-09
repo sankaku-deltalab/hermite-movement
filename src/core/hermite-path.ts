@@ -56,17 +56,16 @@ export namespace HermitePath {
       const startTimeMs = totalTimeMs;
       const endTimeMs = totalTimeMs + next.durationMs;
 
-      const startVelocityRaw = prev.velocity;
       const speedMlt = next.durationMs;
       const path: HermitePathPart = {
         start: {
           position: prev.pos,
-          velocity: Vec2d.mlt(startVelocityRaw, speedMlt),
+          velocity: Vec2d.mlt(prev.velocity, speedMlt),
           timeMs: startTimeMs,
         },
         end: {
           position: next.pos,
-          velocity: Vec2d.mlt(prev.velocity, speedMlt),
+          velocity: Vec2d.mlt(next.velocity, speedMlt),
           timeMs: endTimeMs,
         },
       };
